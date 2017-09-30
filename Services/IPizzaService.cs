@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using PizzaApi.Models;
+
+namespace PizzaApi.Services
+{
+	public interface IPizzaService
+	{
+		List<MenuItemDTO> GetMenu();
+	} 
+
+}
