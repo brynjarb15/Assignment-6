@@ -6,6 +6,7 @@ namespace PizzaApi.Services
 {
 	public interface IPizzaService
 	{
+		//IEnumerable<MenuItemDTO> GetMenu();
 		List<MenuItemDTO> GetMenu();
 	} 
 

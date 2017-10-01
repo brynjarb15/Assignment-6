@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Services;
 
 namespace PizzaApi.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/")]
 	public class PizzaController : Controller
 	{
 		private readonly IPizzaService _pizzaService;
+		private IMemoryCache _cache;
 
-		public PizzaController(IPizzaService pizzaService)
+		public PizzaController(IPizzaService pizzaService, IMemoryCache memoryCache)
 		{
 			_pizzaService = pizzaService;
+			_cache = memoryCache;
 		}
 
 		// GET api/
 		[HttpGet]
+		[Route("menu")]
 		public IActionResult GetMenu()
 		{
 			var menu = _pizzaService.GetMenu();
