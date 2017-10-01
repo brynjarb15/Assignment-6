@@ -8,6 +8,7 @@ namespace PizzaApi.Services
 	{
 		//IEnumerable<MenuItemDTO> GetMenu();
 		List<MenuItemDTO> GetMenu();
+		MenuItemDTO SingleMenuItem(int menuItemID);
 	} 
 
 }

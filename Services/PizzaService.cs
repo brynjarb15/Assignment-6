@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Api.Services.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Models;
 using PizzaApi.Models.EntityModels;
@@ -42,6 +43,22 @@ namespace PizzaApi.Services
 				_cache.Set("MenuItem", menuItem, cacheEntryOptions);
 			}
 			return menuItem;
+		}
+		public MenuItemDTO SingleMenuItem(int menuItemID)
+		{
+			var item = (from i in _menuItems.All()
+								where i.ID == menuItemID
+								select new MenuItemDTO
+								{
+									ID = i.ID,
+									Name = i.Name,
+									Price = i.Price
+								}).SingleOrDefault();
+			if(item == null)
+			{
+				throw new ItemNotFoundException();
+			}
+			return item;
 		}
 	}
 }

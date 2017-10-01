@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Api.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Services;
@@ -28,6 +29,22 @@ namespace PizzaApi.Controllers
 			var menu = _pizzaService.GetMenu();
 
 			return Ok(menu);
+		}
+
+		[HttpGet]
+		[Route("menu/{menuItemID:int}")]
+		public IActionResult SingleMenuItem(int menuItemID)
+		{
+			try
+			{
+				var singleItem = _pizzaService.SingleMenuItem(menuItemID);
+				return Ok(singleItem);
+			}
+			catch(ItemNotFoundException e)
+			{
+				return NotFound(e.Message);
+			}
+			
 		}
 
 		// GET api/values/5
