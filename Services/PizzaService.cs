@@ -228,19 +228,19 @@ namespace PizzaApi.Services
 		}
 
 
-		public List<OrderDTO> GetOrders()
+		public List<OrderLiteDTO> GetOrders()
 		{
-			List<OrderDTO> orders;
+			List<OrderLiteDTO> orders;
 			
 			orders = (from i in _orders.All()
-					select new OrderDTO
+					where !i.isCancelled
+					select new OrderLiteDTO
 					{
 						ID = i.ID,
 						DateOfOrder = i.DateOfOrder,
 						CustomerName = i.CustomerName,
 						IsPickup = i.isPickup,
 						Address = i.Address
-						//Vantar OrderedItems
 					}).ToList();
 
 			return orders;
@@ -249,7 +249,7 @@ namespace PizzaApi.Services
 		public OrderDTO GetOrderByID(int orderID)
 		{
 			var item = (from o in _orders.All()
-								where o.ID == orderID
+								where o.ID == orderID && !o.isCancelled
 								select new OrderDTO
 								{
 									ID = o.ID,
@@ -273,6 +273,21 @@ namespace PizzaApi.Services
 				throw new ItemNotFoundException();
 			}
 			return item;
+		}
+
+		public void DeleteOrder(int orderID)
+		{
+			var item = (from i in _orders.All()
+						where i.ID == orderID && !i.isCancelled
+						select i).SingleOrDefault();
+
+			if(item == null)
+			{
+				throw new ItemNotFoundException();
+			}
+
+			item.isCancelled = true;
+			_uow.Save();
 		}
 	}
 }

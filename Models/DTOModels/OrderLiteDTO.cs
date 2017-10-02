@@ -14,11 +14,11 @@ namespace PizzaApi.Models
 		///<summary>
 		///The date that the order was made
 		///</summary>
-		public DateTime DateOfOrder { get; set; }
+		public DateTime? DateOfOrder { get; set; }
 		///<summary>
 		///The name of the custormer
 		///</summary>
-		public string CurstomerName { get; set; }
+		public string CustomerName { get; set; }
 		///<summary>
 		///If the order has been picked up
 		///</summary>

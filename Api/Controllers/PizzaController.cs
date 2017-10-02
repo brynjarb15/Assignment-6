@@ -147,13 +147,21 @@ namespace PizzaApi.Controllers
 				return NotFound(e.Message);
 			}
 		}
-/*
+
 		[HttpDelete]
 		[Route("orders/{orderID:int}")]
-		public IActionResult DeleteOrder(int orderID) // TODO
+		public IActionResult DeleteOrder(int orderID)
 		{
-			return Ok();
+			try
+			{
+				_pizzaService.DeleteOrder(orderID);
+			}
+			catch(ItemNotFoundException e)
+			{
+				return NotFound(e.Message);
+			}
+			
+			return NoContent();
 		}
-*/
 	}
 }
