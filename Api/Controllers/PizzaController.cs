@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Api.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using PizzaApi.Models.ViewModels;
 using PizzaApi.Services;
 
 namespace PizzaApi.Controllers
@@ -47,6 +48,17 @@ namespace PizzaApi.Controllers
 			
 		}
 
+		[HttpPost]
+		[Route("menu")]
+		public IActionResult AddItemToMenu([FromBody] MenuItemViewModel newItem)
+		{
+			if(newItem == null) { return BadRequest(); }
+			if(!ModelState.IsValid){ return StatusCode(412); }
+
+				var res = _pizzaService.AddItemToMenu(newItem);
+				return Ok(res);
+			
+		}
 		// GET api/values/5
 /*		[HttpGet("{id}")]
 		public string Get(int id)
