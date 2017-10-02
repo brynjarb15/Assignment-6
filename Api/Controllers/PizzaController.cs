@@ -11,6 +11,9 @@ using PizzaApi.Services.Exceptions;
 
 namespace PizzaApi.Controllers
 {
+	/// <summary>
+	/// The controller for the PizzaAPI
+	/// </summary>
 	[Route("api/")]
 	public class PizzaController : Controller
 	{
@@ -22,6 +25,7 @@ namespace PizzaApi.Controllers
 			_pizzaService = pizzaService;
 			_cache = memoryCache;
 		}
+
 		///<summary>
 		///Gets a list of all items on the menu
 		///</summary>
@@ -39,6 +43,7 @@ namespace PizzaApi.Controllers
 				return StatusCode(204, e.Message);
 			}
 		}
+
 		///<summary>
 		///Gets a single item from the menu using a given id
 		///</summary>
@@ -71,7 +76,7 @@ namespace PizzaApi.Controllers
 
 			var res = _pizzaService.AddItemToMenu(newItem);
 			return Ok(res);
-			
+
 		}
 
 		/// <summary>
@@ -92,7 +97,7 @@ namespace PizzaApi.Controllers
 			{
 				return NotFound(e.Message);
 			}
-			
+
 			return NoContent();
 		}
 
@@ -103,7 +108,7 @@ namespace PizzaApi.Controllers
 		/// <returns></returns>
 		[HttpPost]
 		[Route("orders")]
-		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
+		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel)
 		{
 			var order = new OrderDTO();
 			if (orderViewModel == null)
@@ -127,7 +132,7 @@ namespace PizzaApi.Controllers
 
 		[HttpGet]
 		[Route("orders")]
-		public IActionResult GetOrders() // TODO
+		public IActionResult GetOrders()
 		{
 			var orders = _pizzaService.GetOrders();
 			return Ok(orders);
@@ -135,7 +140,7 @@ namespace PizzaApi.Controllers
 
 		[HttpGet]
 		[Route("orders/{orderID:int}")]
-		public IActionResult GetOrderByID(int orderID) // TODO
+		public IActionResult GetOrderByID(int orderID)
 		{
 			try
 			{
@@ -160,7 +165,7 @@ namespace PizzaApi.Controllers
 			{
 				return NotFound(e.Message);
 			}
-			
+
 			return NoContent();
 		}
 	}
