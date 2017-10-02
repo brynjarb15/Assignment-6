@@ -162,7 +162,8 @@ namespace PizzaApi.Services
 		}
 
 
-		public List<OrderDTO> GetOrders(){
+		public List<OrderDTO> GetOrders()
+		{
 			List<OrderDTO> orders;
 			
 			orders = (from i in _orders.All()
