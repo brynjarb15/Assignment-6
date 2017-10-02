@@ -26,7 +26,7 @@ namespace PizzaApi.Services
 			_cache = memoryCache;
 		}
 		///<summary>
-		///returns a list of all items in _menuItems in the database
+		///returns a list of all items in the menu
 		///</summary>
 		public IEnumerable<MenuItemDTO> GetMenu()
 		{
@@ -68,28 +68,37 @@ namespace PizzaApi.Services
 			///</summary>
 			return menuItem;
 		}
+		///<summary>
+		///Gets a single item from the menu and returns it
+		///</summary>
 		public MenuItemDTO SingleMenuItem(int menuItemID)
 		{
-			MenuItemDTO menuItem;
-			//if(!_cache.TryGetValue("MenuItem", out menuItem))
-			//{
-				menuItem = (from i in _menuItems.All()
-							where i.ID == menuItemID &&
-									!i.isDeleted
-							select new MenuItemDTO
-							{
-								ID = i.ID,
-								Name = i.Name,
-								Price = i.Price
-							}).SingleOrDefault();
-				//var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(8));
-				//_cache.Set("MenuItem", menuItem, cacheEntryOptions);
-			//}
-			
+			///<summary>
+			///Checks if the list of menu items is in cache, if not, a new list is gotten and the cache is set with that list 
+			///The list is then stored in listOfAllItems
+			///</summary>
+			var listOfAllItems = GetMenu();
+			///<summary>
+			///the item with the given ID is found in listOfAllItems
+			///</summary>
+			MenuItemDTO menuItem = (from i in listOfAllItems
+									where i.ID == menuItemID
+									select new MenuItemDTO
+									{
+										ID = i.ID,
+										Name = i.Name,
+										Price = i.Price
+									}).SingleOrDefault();
+			///<summary>
+			///if menuItem returns null, then the item with that ID does not exist and an exceptions is thrown
+			///</summary>
 			if(menuItem == null)
 			{
 				throw new ItemNotFoundException();
 			}
+			///<summary>
+			///returns the single item with the given ID
+			///</summary>
 			return menuItem;
 		}
 
