@@ -31,10 +31,14 @@ namespace PizzaApi.Services
 		public IEnumerable<MenuItemDTO> GetMenu()
 		{
 			IEnumerable<MenuItemDTO> menuItem;
-			//Checks if the cache for all menu items is empty
+			///<summary>
+			///Checks if the cache for all menu items is empty
+			///</summary>
 			if(!_cache.TryGetValue("MenuItem", out menuItem))
 			{
-				//if empty, a new list is gotten
+				///<summary>
+				///if empty, a new list is gotten
+				///</summary>
 				menuItem = (from i in _menuItems.All()
 							where !i.isDeleted
 							select new MenuItemDTO
@@ -43,17 +47,25 @@ namespace PizzaApi.Services
 								Name = i.Name,
 								Price = i.Price
 							}).ToList();
-				// if the list is empty, throw exception
+				///<summary>
+				/// if the list is empty, throw exception
+				///</summary>
 				if(menuItem == null)
 				{
 					throw new NoItemsInListException();
 				}
-				//a time is set for how long the list will exist in the cache
+				///<summary>
+				///a time is set for how long the list will exist in the cache
+				///</summary>
 				var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(8));
-				//the new list is cached in MenuITem with how long it will exist
+				///<summary>
+				///the new list is cached in MenuITem with how long it will exist
+				///</summary>
 				_cache.Set("MenuItem", menuItem, cacheEntryOptions);
 			}
-			//return the list with all items
+			///<summary>
+			///return the list with all items
+			///</summary>
 			return menuItem;
 		}
 		public MenuItemDTO SingleMenuItem(int menuItemID)
@@ -84,7 +96,9 @@ namespace PizzaApi.Services
 
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
-			// a new menu item is created from information given by the view model
+			///<summary>
+			/// a new menu item is created from information given by the view model
+			///</summary>
 			var item = new MenuItem
 			{ 
 				Name = newItem.Name, 
@@ -92,11 +106,17 @@ namespace PizzaApi.Services
 				Description = newItem.Description,
 				Price = newItem.Price			
 			};
-			// the new item is added to the _menuItems table in the database
+			///<summary>
+			/// the new item is added to the _menuItems table in the database
+			///</summary>
 			_menuItems.Add(item);
-			//changes are saved in the database
+			///<summary>
+			///changes are saved in the database
+			///<summary>
 			_uow.Save();
-			//the previously stored cache is removed
+			///<summary>
+			///the previously stored cache is removed
+			///</summary>
 			_cache.Remove("MenuItem");
 			
 			return new MenuItemDTO
@@ -112,17 +132,23 @@ namespace PizzaApi.Services
 		/// <param name="menuItemID">ID of the item to delete</param>
 		public void DeleteMenuItem(int menuItemID)
 		{
-			// Get the item from the db
+			///<summary>
+			///Get the item from the db
+			///<summary>
 			var item = (from i in _menuItems.All()
 						where i.ID == menuItemID &&
 							  !i.isDeleted
 						select i).SingleOrDefault();
-			// If it is not found thow exception
+			///<summary>
+			///If it is not found thow exception
+			///</summary>
 			if (item == null)
 			{
 				throw new ItemNotFoundException();
 			}
-			// Mark it as deleted and save
+			///<summary>
+			/// Mark it as deleted and save
+			///</summary>
 			item.isDeleted = true;
 			_uow.Save();
 
@@ -137,25 +163,33 @@ namespace PizzaApi.Services
 		{
 			//TODO: Maybe do more testing on the viewModel
 
-
-			// Get the MenuItems out of the ViewModel
+			///<summary>
+			///Get the MenuItems out of the ViewModel
+			///</summary>
 			var items = orderViewModel.OrderItemsIds;
-
-			// Check if the items are on the menu
+			///<summary>
+			/// Check if the items are on the menu
+			///</summary>
 			for (int i = 0; i < items.Count(); i++)
 			{
-				// Get the item
+				///<summary>
+				///Get the item
+				///</summary>
 				var item = (from mi in _menuItems.All()
 							 where mi.ID == items[i] &&
 								   !mi.isDeleted
 							 select mi).SingleOrDefault();
-				// If the item is null quit
+				///<summary>
+				///If the item is null quit
+				///</summary>
 				if (item == null)
 				{
 					throw new ItemNotOnMenuException();
 				}
 			}
-			// At this point we know that all the items are on the menu so we add the order.
+			///<summary>
+			///At this point we know that all the items are on the menu so we add the order.
+			///</summary>
 			var order = new Order
 			{
 				DateOfOrder = orderViewModel.DateOfOrder,
@@ -166,21 +200,29 @@ namespace PizzaApi.Services
 			};
 			_orders.Add(order);
 			_uow.Save();
-			var orderID = order.ID; // This seams to work to get the ID of the order
+			var orderID = order.ID; ///<summary>This seams to work to get the ID of the order</summary>
 
-			// Make new OrderLink for each of the item in the order
+			///<summary>
+			///Make new OrderLink for each of the item in the order
+			///</summary>
 			for (int i = 0; i < items.Count(); i++)
 			{
-				// Make new OrderLink
+				///<summary>
+				///Make new OrderLink
+				///</summary>
 				var orderLink = new OrderLink
 				{
 					OrderId = orderID,
 					MenuItemId = items[i]
 				};
-				// Add the link to the table
+				///<summary>
+				///Add the link to the table
+				///</summary>
 				_orderLinks.Add(orderLink);
 			}
-			// Save the database
+			///<summary>
+			///Save the database
+			///</summary>
 			_uow.Save();
 			return GetOrderByID(orderID);
 		}

@@ -22,8 +22,9 @@ namespace PizzaApi.Controllers
 			_pizzaService = pizzaService;
 			_cache = memoryCache;
 		}
-
-		// GET api/
+		///<summary>
+		///Gets a list of all items on the menu
+		///</summary>
 		[HttpGet]
 		[Route("menu")]
 		public IActionResult GetMenu()
@@ -38,7 +39,10 @@ namespace PizzaApi.Controllers
 				return StatusCode(204, e.Message);
 			}
 		}
-
+		///<summary>
+		///Gets a single item from the menu using a given id
+		///</summary>
+		/// <param name="menuItemID">The ID of the item that is supposed to be fetched </param>
 		[HttpGet]
 		[Route("menu/{menuItemID:int}", Name = "SingleMenuItem")]
 		public IActionResult SingleMenuItem(int menuItemID)
@@ -52,10 +56,12 @@ namespace PizzaApi.Controllers
 			{
 				return NotFound(e.Message);
 			}
-			
 		}
 
-
+		///<summary>
+		///Used to add an item to the menu.
+		///</summary>
+		/// <param name="newItem">View model of the menu item that should be added</param>
 		[HttpPost]
 		[Route("menu")]
 		public IActionResult AddItemToMenu([FromBody] MenuItemViewModel newItem)
