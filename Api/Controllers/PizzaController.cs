@@ -48,7 +48,7 @@ namespace PizzaApi.Controllers
 			
 		}
 
-<<<<<<< HEAD
+
 		[HttpPost]
 		[Route("menu")]
 		public IActionResult AddItemToMenu([FromBody] MenuItemViewModel newItem)
@@ -63,12 +63,11 @@ namespace PizzaApi.Controllers
 		// GET api/values/5
 /*		[HttpGet("{id}")]
 		public string Get(int id)
-=======
+
 
 		[HttpDelete]
 		[Route("menu/{menuItemID:int}")]
 		public IActionResult DeleteMenuItem(int menuItemID) // TODO
->>>>>>> 890dce353897d94450be17936d7886998e2e79ee
 		{
 			_pizzaService.DeleteMenuItem(menuItemID);
 			return Ok();

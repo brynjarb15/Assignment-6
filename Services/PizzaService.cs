@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Api.Services.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Models;
 using PizzaApi.Models.EntityModels;
 using PizzaApi.Models.ViewModels;
 using PizzaApi.Repositories;
+using PizzaApi.Services.Exceptions;
 
 namespace PizzaApi.Services
 {
@@ -16,13 +16,7 @@ namespace PizzaApi.Services
 		private readonly IPizzaRepository<MenuItem> _menuItems;
 		private readonly IPizzaRepository<Order> _orders;
 		private readonly IPizzaRepository<OrderLink> _orderLinks;
-<<<<<<< HEAD
 		private IMemoryCache _cache;		
-=======
-		private IMemoryCache _cache;
-
-
->>>>>>> 890dce353897d94450be17936d7886998e2e79ee
 		public PizzaService(IUnitOfWork uow, IMemoryCache memoryCache)
 		{
 			_uow = uow;
@@ -69,7 +63,7 @@ namespace PizzaApi.Services
 			return item;
 		}
 
-<<<<<<< HEAD
+
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
 			var item = new MenuItem
@@ -90,7 +84,7 @@ namespace PizzaApi.Services
 				Name = item.Name,
 				Price = item.Price
 			};
-=======
+		}
 		public void DeleteMenuItem(int menuItemID)
 		{
 			var item = (from i in _menuItems.All()
@@ -104,7 +98,6 @@ namespace PizzaApi.Services
 
 			item.isDeleted = true;
 			_uow.Save();
->>>>>>> 890dce353897d94450be17936d7886998e2e79ee
 		}
 	}
 }
