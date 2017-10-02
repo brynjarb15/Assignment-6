@@ -25,12 +25,16 @@ namespace PizzaApi.Services
 			_orderLinks = _uow.GetRepository<OrderLink>();
 			_cache = memoryCache;
 		}
-
-		public List<MenuItemDTO> GetMenu()
+		///<summary>
+		///returns a list of all items in _menuItems in the database
+		///</summary>
+		public IEnumerable<MenuItemDTO> GetMenu()
 		{
-			List<MenuItemDTO> menuItem;
+			IEnumerable<MenuItemDTO> menuItem;
+			//Checks if the cache for all menu items is empty
 			if(!_cache.TryGetValue("MenuItem", out menuItem))
 			{
+				//if empty, a new list is gotten
 				menuItem = (from i in _menuItems.All()
 							where !i.isDeleted
 							select new MenuItemDTO
@@ -39,33 +43,48 @@ namespace PizzaApi.Services
 								Name = i.Name,
 								Price = i.Price
 							}).ToList();
+				// if the list is empty, throw exception
+				if(menuItem == null)
+				{
+					throw new NoItemsInListException();
+				}
+				//a time is set for how long the list will exist in the cache
 				var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(8));
-
+				//the new list is cached in MenuITem with how long it will exist
 				_cache.Set("MenuItem", menuItem, cacheEntryOptions);
 			}
+			//return the list with all items
 			return menuItem;
 		}
 		public MenuItemDTO SingleMenuItem(int menuItemID)
 		{
-			var item = (from i in _menuItems.All()
-								where i.ID == menuItemID &&
-									  !i.isDeleted
-								select new MenuItemDTO
-								{
-									ID = i.ID,
-									Name = i.Name,
-									Price = i.Price
-								}).SingleOrDefault();
-			if(item == null)
+			MenuItemDTO menuItem;
+			//if(!_cache.TryGetValue("MenuItem", out menuItem))
+			//{
+				menuItem = (from i in _menuItems.All()
+							where i.ID == menuItemID &&
+									!i.isDeleted
+							select new MenuItemDTO
+							{
+								ID = i.ID,
+								Name = i.Name,
+								Price = i.Price
+							}).SingleOrDefault();
+				//var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(8));
+				//_cache.Set("MenuItem", menuItem, cacheEntryOptions);
+			//}
+			
+			if(menuItem == null)
 			{
 				throw new ItemNotFoundException();
 			}
-			return item;
+			return menuItem;
 		}
 
 
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
+			// a new menu item is created from information given by the view model
 			var item = new MenuItem
 			{ 
 				Name = newItem.Name, 
@@ -73,11 +92,13 @@ namespace PizzaApi.Services
 				Description = newItem.Description,
 				Price = newItem.Price			
 			};
-			
+			// the new item is added to the _menuItems table in the database
 			_menuItems.Add(item);
+			//changes are saved in the database
 			_uow.Save();
+			//the previously stored cache is removed
 			_cache.Remove("MenuItem");
-
+			
 			return new MenuItemDTO
 			{
 				ID = item.ID,

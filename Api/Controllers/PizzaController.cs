@@ -27,9 +27,15 @@ namespace PizzaApi.Controllers
 		[Route("menu")]
 		public IActionResult GetMenu()
 		{
-			var menu = _pizzaService.GetMenu();
-
-			return Ok(menu);
+			try
+			{
+				var menu = _pizzaService.GetMenu();
+				return Ok(menu);
+			}
+			catch(NoItemsInListException e)
+			{
+				return StatusCode(204, e.Message);
+			}
 		}
 
 		[HttpGet]
@@ -56,8 +62,8 @@ namespace PizzaApi.Controllers
 			if(newItem == null) { return BadRequest(); }
 			if(!ModelState.IsValid){ return StatusCode(412); }
 
-				var res = _pizzaService.AddItemToMenu(newItem);
-				return Ok(res);
+			var res = _pizzaService.AddItemToMenu(newItem);
+			return Ok(res);
 			
 		}
 		// GET api/values/5

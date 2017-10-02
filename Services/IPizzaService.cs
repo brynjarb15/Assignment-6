@@ -8,7 +8,7 @@ namespace PizzaApi.Services
 	public interface IPizzaService
 	{
 		//IEnumerable<MenuItemDTO> GetMenu();
-		List<MenuItemDTO> GetMenu();
+		IEnumerable<MenuItemDTO> GetMenu();
 		MenuItemDTO SingleMenuItem(int menuItemID);
 		MenuItemDTO AddItemToMenu(MenuItemViewModel newItem);
 		void DeleteMenuItem(int menuItemID);
