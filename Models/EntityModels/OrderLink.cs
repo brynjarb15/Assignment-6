@@ -6,6 +6,6 @@ namespace PizzaApi.Models.EntityModels
 	{
 		public int ID { get; set; }
 		public int OrderId { get; set; }
-		public string MenuItemId { get; set; }
+		public int MenuItemId { get; set; }
 	}
 }
