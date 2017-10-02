@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using PizzaApi.Models;
 using PizzaApi.Models.ViewModels;
 using PizzaApi.Services;
 using PizzaApi.Services.Exceptions;
@@ -33,7 +34,7 @@ namespace PizzaApi.Controllers
 		}
 
 		[HttpGet]
-		[Route("menu/{menuItemID:int}")]
+		[Route("menu/{menuItemID:int}", Name = "SingleMenuItem")]
 		public IActionResult SingleMenuItem(int menuItemID)
 		{
 			try
@@ -60,23 +61,39 @@ namespace PizzaApi.Controllers
 				return Ok(res);
 			
 		}
-		// GET api/values/5
-/*		[HttpGet("{id}")]
-		public string Get(int id)
-*/
 
+		/// <summary>
+		/// Used to delete item from the menu returns http code 404 if the id is not found or
+		/// http code 204(No Content) if it was deleted
+		/// </summary>
+		/// <param name="menuItemID">ID of the item to delete</param>
+		/// <returns>Http code 404 or http code 204</returns>
 		[HttpDelete]
 		[Route("menu/{menuItemID:int}")]
-		public IActionResult DeleteMenuItem(int menuItemID) // TODO
+		public IActionResult DeleteMenuItem(int menuItemID)
 		{
-			_pizzaService.DeleteMenuItem(menuItemID);
-			return Ok();
+			try
+			{
+				_pizzaService.DeleteMenuItem(menuItemID);
+			}
+			catch(ItemNotFoundException e)
+			{
+				return NotFound(e.Message);
+			}
+			
+			return NoContent();
 		}
 
+		/// <summary>
+		/// Adds an order to the database
+		/// </summary>
+		/// <param name="orderViewModel">View model of the oreder that should be added</param>
+		/// <returns></returns>
 		[HttpPost]
 		[Route("orders")]
 		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
 		{
+			var order = new OrderDTO();
 			if (orderViewModel == null)
 			{
 				return BadRequest();
@@ -86,31 +103,16 @@ namespace PizzaApi.Controllers
 				return StatusCode(412);
 			}
 			try{
-				_pizzaService.AddOrder(orderViewModel);
+				order = _pizzaService.AddOrder(orderViewModel);
 			}
 			catch(ItemNotOnMenuException e)
 			{
 				return StatusCode(412, e.Message);
 			}
 
-			return Ok();
+			return CreatedAtRoute("SingleMenuItem", new { menuItemID = order.ID }, order);
 		}
 
-/*
-		[HttpPost]
-		[Route("menu")]
-		public IActionResult AddMenuItem([FromBody] MenuItemViewModel menuItem) // TODO
-		{
-			return Ok();
-		}
-
-		[HttpDelete]
-		[Route("menu/{menuItemID:int}")]
-		public IActionResult DeleteMenuItem() // TODO
-		{
-			return Ok();
-		}
-*/
 		[HttpGet]
 		[Route("orders")]
 		public IActionResult GetOrders() // TODO
@@ -134,13 +136,6 @@ namespace PizzaApi.Controllers
 			}
 		}
 /*
-		[HttpPost]
-		[Route("orders")]
-		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
-		{
-			return Ok();
-		}
-
 		[HttpDelete]
 		[Route("orders/{orderID:int}")]
 		public IActionResult DeleteOrder(int orderID) // TODO

@@ -91,15 +91,17 @@ namespace PizzaApi.Services
 		/// <param name="menuItemID">ID of the item to delete</param>
 		public void DeleteMenuItem(int menuItemID)
 		{
+			// Get the item from the db
 			var item = (from i in _menuItems.All()
-						where i.ID == menuItemID
+						where i.ID == menuItemID &&
+							  !i.isDeleted
 						select i).SingleOrDefault();
-
+			// If it is not found thow exception
 			if (item == null)
 			{
 				throw new ItemNotFoundException();
 			}
-
+			// Mark it as deleted and save
 			item.isDeleted = true;
 			_uow.Save();
 
@@ -110,7 +112,7 @@ namespace PizzaApi.Services
 		/// Used to add an order to the database
 		/// </summary>
 		/// <param name="orderViewModel">View Model with the order to add</param>
-		public void AddOrder(OrderViewModel orderViewModel)
+		public OrderDTO AddOrder(OrderViewModel orderViewModel)
 		{
 			//TODO: Maybe do more testing on the viewModel
 
@@ -159,6 +161,7 @@ namespace PizzaApi.Services
 			}
 			// Save the database
 			_uow.Save();
+			return GetOrderByID(orderID);
 		}
 
 
@@ -182,16 +185,25 @@ namespace PizzaApi.Services
 
 		public OrderDTO GetOrderByID(int orderID)
 		{
-			var item = (from i in _orders.All()
-								where i.ID == orderID
+			var item = (from o in _orders.All()
+								where o.ID == orderID
 								select new OrderDTO
 								{
-									ID = i.ID,
-									DateOfOrder = i.DateOfOrder,
-									CustomerName = i.CustomerName,
-									IsPickup = i.isPickup,
-									Address = i.Address
-									//Vatnar OrderedItems
+									ID = o.ID,
+									DateOfOrder = o.DateOfOrder,
+									CustomerName = o.CustomerName,
+									IsPickup = o.isPickup,
+									Address = o.Address,
+									OrderedItems = (from ol in _orderLinks.All()
+													where ol.OrderId == o.ID
+													join i in _menuItems.All() on ol.MenuItemId equals i.ID
+													where !i.isDeleted
+													select new MenuItemDTO
+													{
+														ID = i.ID,
+														Name = i.Name,
+														Price = i.Price
+													}).ToList()
 								}).SingleOrDefault();
 			if(item == null)
 			{
