@@ -7,7 +7,7 @@ namespace PizzaApi.Models
 	{
 		public int ID { get; set; }
 
-		public DateTime DateOfOrder { get; set; }
+		public DateTime? DateOfOrder { get; set; }
 
 		public string CustomerName { get; set; }
 
