@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Api.Services.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Models;
 using PizzaApi.Models.EntityModels;
+using PizzaApi.Models.ViewModels;
 using PizzaApi.Repositories;
+using PizzaApi.Services.Exceptions;
 
 namespace PizzaApi.Services
 {
@@ -64,6 +65,10 @@ namespace PizzaApi.Services
 			return item;
 		}
 
+		/// <summary>
+		/// Deletes an item from the menu database and empties the cache
+		/// </summary>
+		/// <param name="menuItemID">ID of the item to delete</param>
 		public void DeleteMenuItem(int menuItemID)
 		{
 			var item = (from i in _menuItems.All()
@@ -76,6 +81,63 @@ namespace PizzaApi.Services
 			}
 
 			item.isDeleted = true;
+			_uow.Save();
+
+			// TODO: empty the cache for the menu
+		}
+
+		/// <summary>
+		/// Used to add an order to the database
+		/// </summary>
+		/// <param name="orderViewModel">View Model with the order to add</param>
+		public void AddOrder(OrderViewModel orderViewModel)
+		{
+			//TODO: Maybe do more testing on the viewModel
+
+
+			// Get the MenuItems out of the ViewModel
+			var items = orderViewModel.OrderItemsIds;
+
+			// Check if the items are on the menu
+			for (int i = 0; i < items.Count(); i++)
+			{
+				// Get the item
+				var item = (from mi in _menuItems.All()
+							 where mi.ID == items[i] &&
+								   !mi.isDeleted
+							 select mi).SingleOrDefault();
+				// If the item is null quit
+				if (item == null)
+				{
+					throw new ItemNotOnMenuException();
+				}
+			}
+			// At this point we know that all the items are on the menu so we add the order.
+			var order = new Order
+			{
+				DateOfOrder = orderViewModel.DateOfOrder,
+				CustomerName = orderViewModel.CustomerName,
+				isPickup = orderViewModel.IsPickup,
+				Address = orderViewModel.Address,
+				isCancelled = false
+			};
+			_orders.Add(order);
+			_uow.Save();
+			var orderID = order.ID; // This seams to work to get the ID of the order
+
+			// Make new OrderLink for each of the item in the order
+			for (int i = 0; i < items.Count(); i++)
+			{
+				// Make new OrderLink
+				var orderLink = new OrderLink
+				{
+					OrderId = orderID,
+					MenuItemId = items[i]
+				};
+				// Add the link to the table
+				_orderLinks.Add(orderLink);
+			}
+			// Save the database
 			_uow.Save();
 		}
 	}

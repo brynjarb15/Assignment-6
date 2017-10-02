@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PizzaApi.Models;
+using PizzaApi.Models.ViewModels;
 
 namespace PizzaApi.Services
 {
@@ -11,6 +12,8 @@ namespace PizzaApi.Services
 		MenuItemDTO SingleMenuItem(int menuItemID);
 
 		void DeleteMenuItem(int menuItemID);
+
+		void AddOrder(OrderViewModel orderViewModel);
 	} 
 
 }
