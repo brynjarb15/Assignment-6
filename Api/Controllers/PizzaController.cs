@@ -70,21 +70,30 @@ namespace PizzaApi.Controllers
 		{
 			return Ok();
 		}
-
+*/
 		[HttpGet]
 		[Route("orders")]
 		public IActionResult GetOrders() // TODO
 		{
-			return Ok();
+			var orders = _pizzaService.GetOrders();
+			return Ok(orders);
 		}
 
 		[HttpGet]
 		[Route("orders/{orderID:int}")]
 		public IActionResult GetOrderByID(int orderID) // TODO
 		{
-			return Ok();
+			try
+			{
+				var orderById = _pizzaService.GetOrderByID(orderID);
+				return Ok(orderById);
+			}
+			catch(ItemNotFoundException e)
+			{
+				return NotFound(e.Message);
+			}
 		}
-
+/*
 		[HttpPost]
 		[Route("orders")]
 		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO

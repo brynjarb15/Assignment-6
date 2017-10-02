@@ -11,6 +11,8 @@ namespace PizzaApi.Services
 		MenuItemDTO SingleMenuItem(int menuItemID);
 
 		void DeleteMenuItem(int menuItemID);
-	} 
+        List<OrderDTO> GetOrders();
+		OrderDTO GetOrderByID(int orderID);
+    } 
 
 }

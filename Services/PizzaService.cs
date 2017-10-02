@@ -78,5 +78,43 @@ namespace PizzaApi.Services
 			item.isDeleted = true;
 			_uow.Save();
 		}
+
+
+		public List<OrderDTO> GetOrders(){
+			List<OrderDTO> orders;
+			
+			orders = (from i in _orders.All()
+					select new OrderDTO
+					{
+						ID = i.ID,
+						DateOfOrder = i.DateOfOrder,
+						CustomerName = i.CustomerName,
+						IsPickup = i.isPickup,
+						Address = i.Address
+						//Vantar OrderedItems
+					}).ToList();
+
+			return orders;
+		}
+
+		public OrderDTO GetOrderByID(int orderID)
+		{
+			var item = (from i in _orders.All()
+								where i.ID == orderID
+								select new OrderDTO
+								{
+									ID = i.ID,
+									DateOfOrder = i.DateOfOrder,
+									CustomerName = i.CustomerName,
+									IsPickup = i.isPickup,
+									Address = i.Address
+									//Vatnar OrderedItems
+								}).SingleOrDefault();
+			if(item == null)
+			{
+				throw new ItemNotFoundException();
+			}
+			return item;
+		}
 	}
 }
