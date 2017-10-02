@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Api.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using PizzaApi.Models.ViewModels;
 using PizzaApi.Services;
+using PizzaApi.Services.Exceptions;
 
 namespace PizzaApi.Controllers
 {
@@ -63,13 +63,36 @@ namespace PizzaApi.Controllers
 		// GET api/values/5
 /*		[HttpGet("{id}")]
 		public string Get(int id)
-
+*/
 
 		[HttpDelete]
 		[Route("menu/{menuItemID:int}")]
 		public IActionResult DeleteMenuItem(int menuItemID) // TODO
 		{
 			_pizzaService.DeleteMenuItem(menuItemID);
+			return Ok();
+		}
+
+		[HttpPost]
+		[Route("orders")]
+		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
+		{
+			if (orderViewModel == null)
+			{
+				return BadRequest();
+			}
+			if (!ModelState.IsValid)
+			{
+				return StatusCode(412);
+			}
+			try{
+				_pizzaService.AddOrder(orderViewModel);
+			}
+			catch(ItemNotOnMenuException e)
+			{
+				return StatusCode(412, e.Message);
+			}
+
 			return Ok();
 		}
 

@@ -7,7 +7,7 @@ namespace PizzaApi.Models.ViewModels
 	public class OrderViewModel
 	{
 		[Required]
-		public DateTime DateOfOrder { get; set; }
+		public DateTime? DateOfOrder { get; set; }
 		[Required]
 		public string CustomerName { get; set; }
 		[Required]
