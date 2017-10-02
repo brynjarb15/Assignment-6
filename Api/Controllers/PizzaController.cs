@@ -47,6 +47,15 @@ namespace PizzaApi.Controllers
 			
 		}
 
+
+		[HttpDelete]
+		[Route("menu/{menuItemID:int}")]
+		public IActionResult DeleteMenuItem(int menuItemID) // TODO
+		{
+			_pizzaService.DeleteMenuItem(menuItemID);
+			return Ok();
+		}
+
 /*
 		[HttpPost]
 		[Route("menu")]
