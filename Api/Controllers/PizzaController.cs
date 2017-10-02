@@ -47,29 +47,48 @@ namespace PizzaApi.Controllers
 			
 		}
 
-		// GET api/values/5
-/*		[HttpGet("{id}")]
-		public string Get(int id)
-		{
-			return "value";
-		}
-
-		// POST api/values
+/*
 		[HttpPost]
-		public void Post([FromBody]string value)
+		[Route("menu")]
+		public IActionResult AddMenuItem([FromBody] MenuItemViewModel menuItem) // TODO
 		{
+			return Ok();
 		}
 
-		// PUT api/values/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody]string value)
+		[HttpDelete]
+		[Route("menu/{menuItemID:int}")]
+		public IActionResult DeleteMenuItem() // TODO
 		{
+			return Ok();
 		}
 
-		// DELETE api/values/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
+		[HttpGet]
+		[Route("orders")]
+		public IActionResult GetOrders() // TODO
 		{
-		}**/
+			return Ok();
+		}
+
+		[HttpGet]
+		[Route("orders/{orderID:int}")]
+		public IActionResult GetOrderByID(int orderID) // TODO
+		{
+			return Ok();
+		}
+
+		[HttpPost]
+		[Route("orders")]
+		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
+		{
+			return Ok();
+		}
+
+		[HttpGet]
+		[Route("orders/{orderID:int}")]
+		public IActionResult DeleteOrder(int orderID) // TODO
+		{
+			return Ok();
+		}
+*/
 	}
 }
