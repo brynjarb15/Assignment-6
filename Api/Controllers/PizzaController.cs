@@ -83,7 +83,7 @@ namespace PizzaApi.Controllers
 			return Ok();
 		}
 
-		[HttpGet]
+		[HttpDelete]
 		[Route("orders/{orderID:int}")]
 		public IActionResult DeleteOrder(int orderID) // TODO
 		{
