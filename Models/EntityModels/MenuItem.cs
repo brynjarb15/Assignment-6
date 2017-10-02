@@ -7,6 +7,6 @@ namespace PizzaApi.Models.EntityModels
 		public int SpicyLevel { get; set; }
 		public string Description { get; set; }
 		public double Price { get; set; }
-		bool isDeleted { get; set; }
+		public bool isDeleted { get; set; }
 	}
 }

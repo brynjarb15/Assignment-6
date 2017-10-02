@@ -9,6 +9,6 @@ namespace PizzaApi.Models.EntityModels
 		public string CustomerName { get; set; }
 		public bool isPickup { get; set; }
 		public string Address { get; set; }
-		bool isCancelled { get; set; }
+		public bool isCancelled { get; set; }
 	}
 }

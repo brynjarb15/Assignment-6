@@ -16,7 +16,13 @@ namespace PizzaApi.Services
 		private readonly IPizzaRepository<MenuItem> _menuItems;
 		private readonly IPizzaRepository<Order> _orders;
 		private readonly IPizzaRepository<OrderLink> _orderLinks;
+<<<<<<< HEAD
 		private IMemoryCache _cache;		
+=======
+		private IMemoryCache _cache;
+
+
+>>>>>>> 890dce353897d94450be17936d7886998e2e79ee
 		public PizzaService(IUnitOfWork uow, IMemoryCache memoryCache)
 		{
 			_uow = uow;
@@ -31,12 +37,13 @@ namespace PizzaApi.Services
 			List<MenuItemDTO> menuItem;
 			if(!_cache.TryGetValue("MenuItem", out menuItem))
 			{
-				menuItem = (from c in _menuItems.All()
+				menuItem = (from i in _menuItems.All()
+							where !i.isDeleted
 							select new MenuItemDTO
 							{
-								ID = c.ID,
-								Name = c.Name,
-								Price = c.Price
+								ID = i.ID,
+								Name = i.Name,
+								Price = i.Price
 							}).ToList();
 				var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(8));
 
@@ -47,7 +54,8 @@ namespace PizzaApi.Services
 		public MenuItemDTO SingleMenuItem(int menuItemID)
 		{
 			var item = (from i in _menuItems.All()
-								where i.ID == menuItemID
+								where i.ID == menuItemID &&
+									  !i.isDeleted
 								select new MenuItemDTO
 								{
 									ID = i.ID,
@@ -61,6 +69,7 @@ namespace PizzaApi.Services
 			return item;
 		}
 
+<<<<<<< HEAD
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
 			var item = new MenuItem
@@ -81,6 +90,21 @@ namespace PizzaApi.Services
 				Name = item.Name,
 				Price = item.Price
 			};
+=======
+		public void DeleteMenuItem(int menuItemID)
+		{
+			var item = (from i in _menuItems.All()
+						where i.ID == menuItemID
+						select i).SingleOrDefault();
+
+			if (item == null)
+			{
+				throw new ItemNotFoundException();
+			}
+
+			item.isDeleted = true;
+			_uow.Save();
+>>>>>>> 890dce353897d94450be17936d7886998e2e79ee
 		}
 	}
 }
