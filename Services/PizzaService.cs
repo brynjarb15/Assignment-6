@@ -16,9 +16,7 @@ namespace PizzaApi.Services
 		private readonly IPizzaRepository<MenuItem> _menuItems;
 		private readonly IPizzaRepository<Order> _orders;
 		private readonly IPizzaRepository<OrderLink> _orderLinks;
-		private IMemoryCache _cache;
-
-
+		private IMemoryCache _cache;		
 		public PizzaService(IUnitOfWork uow, IMemoryCache memoryCache)
 		{
 			_uow = uow;
@@ -65,6 +63,28 @@ namespace PizzaApi.Services
 			return item;
 		}
 
+
+		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
+		{
+			var item = new MenuItem
+			{ 
+				Name = newItem.Name, 
+				SpicyLevel = newItem.SpicyLevel, 
+				Description = newItem.Description,
+				Price = newItem.Price			
+			};
+			
+			_menuItems.Add(item);
+			_uow.Save();
+			_cache.Remove("MenuItem");
+
+			return new MenuItemDTO
+			{
+				ID = item.ID,
+				Name = item.Name,
+				Price = item.Price
+			};
+		}
 		/// <summary>
 		/// Deletes an item from the menu database and empties the cache
 		/// </summary>

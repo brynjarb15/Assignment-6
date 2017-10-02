@@ -10,6 +10,7 @@ namespace PizzaApi.Services
 		//IEnumerable<MenuItemDTO> GetMenu();
 		List<MenuItemDTO> GetMenu();
 		MenuItemDTO SingleMenuItem(int menuItemID);
+		MenuItemDTO AddItemToMenu(MenuItemViewModel newItem);
 		void DeleteMenuItem(int menuItemID);
         List<OrderDTO> GetOrders();
 		OrderDTO GetOrderByID(int orderID);

@@ -49,6 +49,22 @@ namespace PizzaApi.Controllers
 		}
 
 
+		[HttpPost]
+		[Route("menu")]
+		public IActionResult AddItemToMenu([FromBody] MenuItemViewModel newItem)
+		{
+			if(newItem == null) { return BadRequest(); }
+			if(!ModelState.IsValid){ return StatusCode(412); }
+
+				var res = _pizzaService.AddItemToMenu(newItem);
+				return Ok(res);
+			
+		}
+		// GET api/values/5
+/*		[HttpGet("{id}")]
+		public string Get(int id)
+*/
+
 		[HttpDelete]
 		[Route("menu/{menuItemID:int}")]
 		public IActionResult DeleteMenuItem(int menuItemID) // TODO
