@@ -129,6 +129,9 @@ namespace PizzaApi.Controllers
 			return CreatedAtRoute("GetOrderByID", new { orderID = order.ID }, order);
 		}
 
+		/// <summary>
+		/// Returns all the orders
+		/// </summary>
 		[HttpGet]
 		[Route("orders")]
 		public IActionResult GetOrders()
@@ -137,6 +140,10 @@ namespace PizzaApi.Controllers
 			return Ok(orders);
 		}
 
+		/// <summary>
+		/// Get a single order with a given ID
+		/// </summary>
+		/// <param name="orderID">The ID of the order</param>
 		[HttpGet]
 		[Route("orders/{orderID:int}", Name = "GetOrderByID")]
 		public IActionResult GetOrderByID(int orderID)
@@ -151,7 +158,10 @@ namespace PizzaApi.Controllers
 				return NotFound(e.Message);
 			}
 		}
-
+		/// <summary>
+		/// Deletes a single order with a given ID
+		/// </summary>
+		/// <param name="orderID">The ID of the order</param>
 		[HttpDelete]
 		[Route("orders/{orderID:int}")]
 		public IActionResult DeleteOrder(int orderID)

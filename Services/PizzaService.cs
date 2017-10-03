@@ -260,6 +260,7 @@ namespace PizzaApi.Services
 		/// Deletes a single order with a given ID
 		/// </summary>
 		/// <param name="orderID">The ID of the order</param>
+		/// <returns></returns>
 		public void DeleteOrder(int orderID)
 		{
 			//Finds the item that has the same ID
