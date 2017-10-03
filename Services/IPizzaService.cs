@@ -7,7 +7,6 @@ namespace PizzaApi.Services
 {
 	public interface IPizzaService
 	{
-		//IEnumerable<MenuItemDTO> GetMenu();
 		IEnumerable<MenuItemDTO> GetMenu();
 		MenuItemDTO SingleMenuItem(int menuItemID);
 		MenuItemDTO AddItemToMenu(MenuItemViewModel newItem);
@@ -16,7 +15,5 @@ namespace PizzaApi.Services
 		OrderDTO GetOrderByID(int orderID);
 		OrderDTO AddOrder(OrderViewModel orderViewModel);
 		void DeleteOrder(int menuItemID);
-	} 
-
-
+	}
 }

@@ -11,6 +11,9 @@ using PizzaApi.Services.Exceptions;
 
 namespace PizzaApi.Controllers
 {
+	/// <summary>
+	/// The controller for the PizzaAPI
+	/// </summary>
 	[Route("api/")]
 	public class PizzaController : Controller
 	{
@@ -22,8 +25,9 @@ namespace PizzaApi.Controllers
 			_pizzaService = pizzaService;
 			_cache = memoryCache;
 		}
+
 		///<summary>
-		///Gets a list of all items on the menu
+		/// Gets a list of all items on the menu
 		///</summary>
 		[HttpGet]
 		[Route("menu")]
@@ -39,8 +43,9 @@ namespace PizzaApi.Controllers
 				return StatusCode(204, e.Message);
 			}
 		}
+
 		///<summary>
-		///Gets a single item from the menu using a given id
+		/// Gets a single item from the menu using a given id
 		///</summary>
 		/// <param name="menuItemID">The ID of the item that is supposed to be fetched </param>
 		[HttpGet]
@@ -59,7 +64,7 @@ namespace PizzaApi.Controllers
 		}
 
 		///<summary>
-		///Used to add an item to the menu.
+		/// Used to add an item to the menu.
 		///</summary>
 		/// <param name="newItem">View model of the menu item that should be added</param>
 		[HttpPost]
@@ -70,8 +75,7 @@ namespace PizzaApi.Controllers
 			if(!ModelState.IsValid){ return StatusCode(412); }
 
 			var res = _pizzaService.AddItemToMenu(newItem);
-			return Ok(res);
-			
+			return CreatedAtRoute("SingleMenuItem", new { menuItemID = res.ID }, res);
 		}
 
 		/// <summary>
@@ -92,7 +96,7 @@ namespace PizzaApi.Controllers
 			{
 				return NotFound(e.Message);
 			}
-			
+
 			return NoContent();
 		}
 
@@ -103,7 +107,7 @@ namespace PizzaApi.Controllers
 		/// <returns></returns>
 		[HttpPost]
 		[Route("orders")]
-		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel) // TODO
+		public IActionResult AddOrder([FromBody] OrderViewModel orderViewModel)
 		{
 			var order = new OrderDTO();
 			if (orderViewModel == null)
@@ -122,20 +126,20 @@ namespace PizzaApi.Controllers
 				return StatusCode(412, e.Message);
 			}
 
-			return CreatedAtRoute("SingleMenuItem", new { menuItemID = order.ID }, order);
+			return CreatedAtRoute("GetOrderByID", new { orderID = order.ID }, order);
 		}
 
 		[HttpGet]
 		[Route("orders")]
-		public IActionResult GetOrders() // TODO
+		public IActionResult GetOrders()
 		{
 			var orders = _pizzaService.GetOrders();
 			return Ok(orders);
 		}
 
 		[HttpGet]
-		[Route("orders/{orderID:int}")]
-		public IActionResult GetOrderByID(int orderID) // TODO
+		[Route("orders/{orderID:int}", Name = "GetOrderByID")]
+		public IActionResult GetOrderByID(int orderID)
 		{
 			try
 			{
@@ -160,7 +164,7 @@ namespace PizzaApi.Controllers
 			{
 				return NotFound(e.Message);
 			}
-			
+
 			return NoContent();
 		}
 	}

@@ -30,7 +30,7 @@ namespace PizzaApi.Models.ViewModels
 		[Required]
 		public string Address { get; set; }
 		///<summary>
-		///A list of all order ids
+		///A list of all items to order
 		///</summary>
 		[Required]
 		public List<int> OrderItemsIds { get; set; }
