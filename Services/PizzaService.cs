@@ -94,7 +94,7 @@ namespace PizzaApi.Services
 			///</summary>
 			if(menuItem == null)
 			{
-				throw new ItemNotFoundException();
+				throw new ItemNotOnMenuException();
 			}
 			///<summary>
 			///returns the single item with the given ID
@@ -105,6 +105,7 @@ namespace PizzaApi.Services
 
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
+			///tjekka hvort item sé nú þegar til?
 			///<summary>
 			/// a new menu item is created from information given by the view model
 			///</summary>

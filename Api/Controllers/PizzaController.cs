@@ -52,7 +52,7 @@ namespace PizzaApi.Controllers
 				var singleItem = _pizzaService.SingleMenuItem(menuItemID);
 				return Ok(singleItem);
 			}
-			catch(ItemNotFoundException e)
+			catch(ItemNotOnMenuException e)
 			{
 				return NotFound(e.Message);
 			}
