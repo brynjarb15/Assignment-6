@@ -100,7 +100,6 @@ namespace PizzaApi.Services
 		/// <returns></returns>
 		public MenuItemDTO AddItemToMenu(MenuItemViewModel newItem)
 		{
-			///tjekka hvort item sé nú þegar til?
 			// A new menu item is created from information given by the view model
 			var item = new MenuItem
 			{
