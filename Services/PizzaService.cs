@@ -202,7 +202,7 @@ namespace PizzaApi.Services
 		/// </summary>
 		/// <returns></returns>
 		public List<OrderLiteDTO> GetOrders()
-		{	
+		{
 			List<OrderLiteDTO> orders;
 			//Gets all the orders and returns them in a list and in the OrderLiteDTO model
 			orders = (from i in _orders.All()
@@ -235,11 +235,10 @@ namespace PizzaApi.Services
 									CustomerName = o.CustomerName,
 									IsPickup = o.isPickup,
 									Address = o.Address,
-									//All the items on the order are found through orderLinks and put in a list 
+									//All the items on the order are found through orderLinks and put in a list
 									OrderedItems = (from ol in _orderLinks.All()
-													where ol.OrderId == o.ID
 													join i in _menuItems.All() on ol.MenuItemId equals i.ID
-													where !i.isDeleted
+													where !i.isDeleted && ol.OrderId == o.ID
 													select new MenuItemDTO
 													{
 														ID = i.ID,
