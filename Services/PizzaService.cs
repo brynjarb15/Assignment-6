@@ -198,13 +198,13 @@ namespace PizzaApi.Services
 		}
 
 		/// <summary>
-		/// TODO: Fylla inní þetta
+		/// Returns all the orders
 		/// </summary>
 		/// <returns></returns>
 		public List<OrderLiteDTO> GetOrders()
-		{
+		{	
 			List<OrderLiteDTO> orders;
-
+			//Gets all the orders and returns them in a list and in the OrderLiteDTO model
 			orders = (from i in _orders.All()
 					where !i.isCancelled
 					select new OrderLiteDTO
@@ -215,17 +215,17 @@ namespace PizzaApi.Services
 						IsPickup = i.isPickup,
 						Address = i.Address
 					}).ToList();
-
 			return orders;
 		}
 
 		/// <summary>
-		/// TODO: fylla inní þetta
+		/// Get a single order with a given ID
 		/// </summary>
-		/// <param name="orderID"></param>
+		/// <param name="orderID">The ID of the order</param>
 		/// <returns></returns>
 		public OrderDTO GetOrderByID(int orderID)
 		{
+			//Finds the item with the same ID as the orderID and returns a OrderDTO
 			var item = (from o in _orders.All()
 								where o.ID == orderID && !o.isCancelled
 								select new OrderDTO
@@ -235,9 +235,11 @@ namespace PizzaApi.Services
 									CustomerName = o.CustomerName,
 									IsPickup = o.isPickup,
 									Address = o.Address,
+									//All the items on the order are found through orderLinks and put in a list 
 									OrderedItems = (from ol in _orderLinks.All()
+													where ol.OrderId == o.ID
 													join i in _menuItems.All() on ol.MenuItemId equals i.ID
-													where !i.isDeleted && ol.OrderId == o.ID
+													where !i.isDeleted
 													select new MenuItemDTO
 													{
 														ID = i.ID,
@@ -245,28 +247,31 @@ namespace PizzaApi.Services
 														Price = i.Price
 													}).ToList()
 								}).SingleOrDefault();
+			//If the item is not found throw an exception
 			if(item == null)
 			{
 				throw new OrderNotFoundException();
 			}
+			//If item is found return the item
 			return item;
 		}
 
 		/// <summary>
-		/// TODO: fylla inní þetta
+		/// Deletes a single order with a given ID
 		/// </summary>
-		/// <param name="orderID"></param>
+		/// <param name="orderID">The ID of the order</param>
 		public void DeleteOrder(int orderID)
 		{
+			//Finds the item that has the same ID
 			var item = (from i in _orders.All()
 						where i.ID == orderID && !i.isCancelled
 						select i).SingleOrDefault();
-
+			//If the item is not found throw an exception
 			if(item == null)
 			{
 				throw new OrderNotFoundException();
 			}
-
+			//If found mark it as cancelled and save it in the database
 			item.isCancelled = true;
 			_uow.Save();
 		}
