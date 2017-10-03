@@ -17,6 +17,7 @@ namespace PizzaApi.Models.ViewModels
 		///The level of spicyness of the menu item
 		///</summary>
 		[Required]
+		[Range(1, int.MaxValue, ErrorMessage = "SpiceLevel must be 1 or more")]
 		public int SpicyLevel { get; set; }
 		///<summary>
 		///The description of the menu item
@@ -27,6 +28,7 @@ namespace PizzaApi.Models.ViewModels
 		///The price of the menu item
 		///</summary>
 		[Required]
+		[Range(0.1, Double.PositiveInfinity, ErrorMessage = "Price must be more than 0.1")]
 		public double Price { get; set; }
 	}
 }
