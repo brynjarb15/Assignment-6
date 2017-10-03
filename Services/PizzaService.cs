@@ -236,9 +236,8 @@ namespace PizzaApi.Services
 									IsPickup = o.isPickup,
 									Address = o.Address,
 									OrderedItems = (from ol in _orderLinks.All()
-													where ol.OrderId == o.ID
 													join i in _menuItems.All() on ol.MenuItemId equals i.ID
-													where !i.isDeleted
+													where !i.isDeleted && ol.OrderId == o.ID
 													select new MenuItemDTO
 													{
 														ID = i.ID,

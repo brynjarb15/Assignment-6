@@ -146,7 +146,7 @@ namespace PizzaApi.Controllers
 				var orderById = _pizzaService.GetOrderByID(orderID);
 				return Ok(orderById);
 			}
-			catch(ItemNotFoundException e)
+			catch(OrderNotFoundException e)
 			{
 				return NotFound(e.Message);
 			}
@@ -160,7 +160,7 @@ namespace PizzaApi.Controllers
 			{
 				_pizzaService.DeleteOrder(orderID);
 			}
-			catch(ItemNotFoundException e)
+			catch(OrderNotFoundException e)
 			{
 				return NotFound(e.Message);
 			}
