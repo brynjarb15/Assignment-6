@@ -248,7 +248,7 @@ namespace PizzaApi.Services
 								}).SingleOrDefault();
 			if(item == null)
 			{
-				throw new ItemNotFoundException();
+				throw new OrderNotFoundException();
 			}
 			return item;
 		}
@@ -265,7 +265,7 @@ namespace PizzaApi.Services
 
 			if(item == null)
 			{
-				throw new ItemNotFoundException();
+				throw new OrderNotFoundException();
 			}
 
 			item.isCancelled = true;

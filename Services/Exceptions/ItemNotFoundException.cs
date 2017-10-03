@@ -8,6 +8,6 @@ namespace PizzaApi.Services.Exceptions
 {
 	public class ItemNotFoundException : Exception
 	{
-	public ItemNotFoundException() : base("Item with the given ID could not be found."){ }
+		public ItemNotFoundException() : base("Item with the given ID could not be found."){ }
 	}
 }

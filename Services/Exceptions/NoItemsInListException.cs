@@ -8,6 +8,6 @@ namespace PizzaApi.Services.Exceptions
 {
 	public class NoItemsInListException : Exception
 	{
-	public NoItemsInListException() : base("This list is empty"){ }
+		public NoItemsInListException() : base("This list is empty"){ }
 	}
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PizzaApi.Services.Exceptions
 {
-	public class ItemNotOnMenuException : Exception
+	public class OrderNotFoundException : Exception
 	{
-		public ItemNotOnMenuException() : base("Item with given id was not on the menu"){ }
+		public OrderNotFoundException() : base("Order with the given ID could not be found."){ }
 	}
 }
